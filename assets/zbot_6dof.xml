@@ -1,0 +1,164 @@
+<mujoco model="zbot_6dof">
+  <!-- Generated from zbot_rl_student/zbot_6s_new.usda at revision
+       aa340d41b803850a5b21e6ec6b9f76012f9580c0. The body graph, joint frames,
+       masses, centers of mass, principal inertias and geometry are preserved. -->
+  <compiler angle="radian" meshdir="meshes"/>
+  <option timestep="0.004" integrator="implicitfast" cone="pyramidal" solver="PGS"
+          iterations="30" gravity="0 0 -9.81"/>
+  <size nconmax="200" njmax="600"/>
+  <visual>
+    <quality shadowsize="4096"/>
+  </visual>
+
+  <default>
+    <joint armature="0.003" damping="0.08" frictionloss="0.02"
+           limited="true" range="-3.1415927 3.1415927"/>
+    <geom type="mesh" condim="3" friction="1 0.005 0.0001"
+          solimp="0.9 0.95 0.001" solref="0.008 1" density="0"/>
+    <position kp="50" kv="5" ctrlrange="-3.1415927 3.1415927"
+              forcerange="-2000 2000" ctrllimited="true"/>
+  </default>
+
+  <asset>
+    <texture name="floor_grid" type="2d" builtin="checker"
+             rgb1="0.20 0.22 0.25" rgb2="0.32 0.35 0.38"
+             mark="edge" markrgb="0.08 0.09 0.10" width="512" height="512"/>
+    <material name="floor_grid" texture="floor_grid" texrepeat="8 8"
+              texuniform="true" reflectance="0.08"/>
+    <mesh name="base_mesh" file="base.obj"/>
+    <mesh name="b3_mesh" file="b3.obj"/>
+    <mesh name="a3_mesh" file="a3.obj"/>
+    <mesh name="b2_mesh" file="b2.obj"/>
+    <mesh name="a2_mesh" file="a2.obj"/>
+    <mesh name="b1_mesh" file="b1.obj"/>
+    <mesh name="foot_0_mesh" file="foot_0.obj"/>
+    <mesh name="b4_mesh" file="b4.obj"/>
+    <mesh name="a5_mesh" file="a5.obj"/>
+    <mesh name="b5_mesh" file="b5.obj"/>
+    <mesh name="a6_mesh" file="a6.obj"/>
+    <mesh name="foot_1_mesh" file="foot_1.obj"/>
+  </asset>
+
+  <worldbody>
+    <light pos="-1.5 -2 3" dir="0.35 0.45 -1" directional="true" castshadow="true"/>
+    <geom name="floor" type="plane" size="4 4 0.1" material="floor_grid"/>
+
+    <body name="base" pos="-0.0244475 -0.00003995 0.254474"
+          quat="0.6002757 -0.6002633 -0.3735470 -0.3739194">
+      <freejoint/>
+      <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+      <geom name="base_geom" mesh="base_mesh" rgba="0.22 0.24 0.28 1"/>
+      <site name="imu" size="0.006" rgba="0 1 0 1"/>
+
+      <!-- USD joints 3,2,1 are reversed so the MuJoCo tree can root at base. -->
+      <body name="b3" pos="0 0 -0.053">
+        <inertial pos="-0.011593 -0.000000051063 0.023274"
+                  quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                  mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+        <geom mesh="b3_mesh" rgba="0.20 0.48 0.90 1"/>
+        <body name="a3" pos="0 0 -0.053">
+          <joint name="joint3" pos="0 0 0.053" axis="-0.70710678 0 -0.70710678"/>
+          <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                    quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                    mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+          <geom mesh="a3_mesh" rgba="0.25 0.55 0.95 1"/>
+          <body name="b2" pos="0 0 -0.053">
+            <inertial pos="-0.011593 -0.000000051063 0.023274"
+                      quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                      mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+            <geom mesh="b2_mesh" rgba="0.20 0.48 0.90 1"/>
+            <body name="a2" pos="0 0 -0.053">
+              <joint name="joint2" pos="0 0 0.053" axis="0.70710678 0 -0.70710678"/>
+              <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                        quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                        mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+              <geom mesh="a2_mesh" rgba="0.25 0.55 0.95 1"/>
+              <body name="b1" pos="0 0 -0.053">
+                <inertial pos="-0.011593 -0.000000051063 0.023274"
+                          quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                          mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+                <geom mesh="b1_mesh" rgba="0.20 0.48 0.90 1"/>
+                <body name="foot_0" pos="0 0 -0.053">
+                  <joint name="joint1" pos="0 0 0.053" axis="-0.70710678 0 -0.70710678"/>
+                  <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                            quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                            mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+                  <geom name="foot_0_geom" mesh="foot_0_mesh" rgba="0.25 0.55 0.95 1"/>
+                  <site name="left_foot_touch" type="box" pos="0 0 0.03"
+                        size="0.05 0.05 0.045" rgba="0 0 0 0"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+
+      <body name="b4" pos="0 0 0.053">
+        <joint name="joint4" axis="-0.70710678 0 0.70710678"/>
+        <inertial pos="-0.011593 -0.000000051063 0.023274"
+                  quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                  mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+        <geom mesh="b4_mesh" rgba="0.95 0.40 0.18 1"/>
+        <body name="a5" pos="0 0 0.053">
+          <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                    quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                    mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+          <geom mesh="a5_mesh" rgba="0.98 0.48 0.22 1"/>
+          <body name="b5" pos="0 0 0.053">
+            <joint name="joint5" axis="0.70710678 0 0.70710678"/>
+            <inertial pos="-0.011593 -0.000000051063 0.023274"
+                      quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                      mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+            <geom mesh="b5_mesh" rgba="0.95 0.40 0.18 1"/>
+            <body name="a6" pos="0 0 0.053">
+              <inertial pos="-0.0082592 -0.000000051063 0.028345"
+                        quat="0.93171555 -0.00000083555 0.36318883 -0.0000021435"
+                        mass="0.25042" diaginertia="0.000220404 0.00019972 0.00029235598"/>
+              <geom mesh="a6_mesh" rgba="0.98 0.48 0.22 1"/>
+              <body name="foot_1" pos="0 0 0.053">
+                <joint name="joint6" axis="-0.70710678 0 0.70710678"/>
+                <inertial pos="-0.011593 -0.000000051063 0.023274"
+                          quat="0.9997794 -0.000000048328 -0.021004679 0.0000023002"
+                          mass="0.25042" diaginertia="0.00022040308 0.00019972 0.0002923569"/>
+                <geom name="foot_1_geom" mesh="foot_1_mesh" rgba="0.98 0.48 0.22 1"/>
+                <site name="right_foot_touch" type="box" pos="0 0 0.01"
+                      size="0.05 0.05 0.045" rgba="0 0 0 0"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="b3" body2="b4"/>
+  </contact>
+
+  <actuator>
+    <position name="joint1_ctrl" joint="joint1"/>
+    <position name="joint2_ctrl" joint="joint2"/>
+    <position name="joint3_ctrl" joint="joint3"/>
+    <position name="joint4_ctrl" joint="joint4"/>
+    <position name="joint5_ctrl" joint="joint5"/>
+    <position name="joint6_ctrl" joint="joint6"/>
+  </actuator>
+
+  <sensor>
+    <gyro name="gyro" site="imu"/>
+    <velocimeter name="velocity" site="imu"/>
+    <framequat name="orientation" objtype="body" objname="base"/>
+    <touch name="left_touch" site="left_foot_touch"/>
+    <touch name="right_touch" site="right_foot_touch"/>
+    <framelinvel name="left_foot_velocity" objtype="body" objname="foot_0"/>
+    <framelinvel name="right_foot_velocity" objtype="body" objname="foot_1"/>
+  </sensor>
+
+  <keyframe>
+    <!-- qpos tree order: root, joint3, joint2, joint1, joint4, joint5, joint6. -->
+    <key name="stand" qpos="-0.0244475 -0.00003995 0.254474 0.6002757 -0.6002633 -0.3735470 -0.3739194 -2.02 0.837 0.312 2.02 -0.837 -0.312"
+         ctrl="0.312 0.837 -2.02 2.02 -0.837 -0.312"/>
+  </keyframe>
+</mujoco>

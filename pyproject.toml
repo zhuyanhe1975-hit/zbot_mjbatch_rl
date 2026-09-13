@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zbot-mjbatch-rl"
+version = "0.1.0"
+description = "Minimal ZBot 6-DoF walking proof of concept using mjbatch."
+requires-python = ">=3.10"
+dependencies = [
+  "mjbatch",
+  "mujoco==3.11.0",
+  "numpy",
+  "torch>=2.6",
+]
+
+[dependency-groups]
+dev = ["pytest", "ruff", "usd-core"]
+
+[tool.uv.sources]
+mjbatch = { path = "../mjbatch", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zbot_mjbatch_rl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+indent-width = 2
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B"]
