@@ -23,7 +23,20 @@ TOUCH_THRESHOLD = 0.1
 IMPACT_FORCE_SCALE = 100.0
 IMPACT_PENALTY = 0.05
 SLIP_SPEED_SCALE = 0.25
-SLIP_PENALTY = 0.05
+SLIP_PENALTY = 0.5
+REWARD_WEIGHTS = {
+  "forward": 1.0,
+  "survival": 0.2,
+  "single_support": 0.1,
+  "heading": -0.5,
+  "lateral": -0.2,
+  "similar_to_default": -0.1,
+  "rate": -0.01,
+  "torque": -0.0002,
+  "foot_impact": -IMPACT_PENALTY,
+  "foot_slip": -SLIP_PENALTY,
+  "termination": -20.0,
+}
 
 
 def model_path() -> Path:
@@ -148,32 +161,24 @@ class ZBotEnv:
     slip = np.sum(np.square(scaled_slip), axis=1)
     self.foot_contact[:] = contact
     left_contact, right_contact = contact[:, 0], contact[:, 1]
+    fallen = (self.qpos[:, 2] < 0.20) | (np.abs(self.qpos[:, 1]) > 0.5)
 
     terms = {
       "forward": np.clip(speed / TARGET_SPEED, -1.0, 1.0),
+      "survival": np.ones(self.num_envs),
       "heading": np.abs(forward_world[:, 1]),
       "lateral": np.abs(self.qpos[:, 1]),
       "single_support": np.logical_xor(left_contact, right_contact).astype(float),
-      "posture": np.sum(np.abs(self.qpos[:, JOINT_QPOS] - STAND), axis=1),
+      "similar_to_default": np.sum(np.abs(self.qpos[:, JOINT_QPOS] - STAND), axis=1),
       "rate": np.sum(np.square(self.action - self.previous_action), axis=1),
       "torque": np.sum(np.square(self.torque), axis=1),
       "foot_impact": impact,
       "foot_slip": slip,
+      "termination": fallen.astype(float),
     }
-    reward = (
-      terms["forward"]
-      + 0.2
-      + 0.1 * terms["single_support"]
-      - 0.5 * terms["heading"]
-      - 0.2 * terms["lateral"]
-      - 0.02 * terms["posture"]
-      - 0.01 * terms["rate"]
-      - 0.0002 * terms["torque"]
-      - IMPACT_PENALTY * terms["foot_impact"]
-      - SLIP_PENALTY * terms["foot_slip"]
-    ).astype(np.float32)
-    fallen = (self.qpos[:, 2] < 0.20) | (np.abs(self.qpos[:, 1]) > 0.5)
+    reward = sum(REWARD_WEIGHTS[name] * value for name, value in terms.items()).astype(
+      np.float32
+    )
     timeout = self.steps >= EPISODE_STEPS
     done = fallen | timeout
-    reward[fallen] -= 20.0
     return self.obs(), reward, done, terms

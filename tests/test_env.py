@@ -1,7 +1,7 @@
 import mujoco
 import numpy as np
 
-from zbot_mjbatch_rl.env import ACT_DIM, OBS_DIM, ZBotEnv, build_model
+from zbot_mjbatch_rl.env import ACT_DIM, OBS_DIM, REWARD_WEIGHTS, ZBotEnv, build_model
 
 
 def test_model_shape():
@@ -32,17 +32,21 @@ def test_batch_step_and_partial_reset():
   assert np.isfinite(obs).all() and np.isfinite(reward).all()
   assert set(terms) == {
     "forward",
+    "survival",
     "heading",
     "lateral",
     "single_support",
-    "posture",
+    "similar_to_default",
     "rate",
     "torque",
     "foot_impact",
     "foot_slip",
+    "termination",
   }
   assert np.all(terms["foot_impact"] >= 0.0)
   assert np.all(terms["foot_slip"] >= 0.0)
+  reconstructed_reward = sum(REWARD_WEIGHTS[name] * value for name, value in terms.items())
+  np.testing.assert_allclose(reward, reconstructed_reward, rtol=1e-6, atol=1e-6)
   assert not np.array_equal(before, env.qpos)
   untouched = env.qpos[1].copy()
   env.reset(np.array([0], np.int32))

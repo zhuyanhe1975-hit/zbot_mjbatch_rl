@@ -15,6 +15,7 @@
 - observation、reward 和 PPO 都刻意保持最小。
 - 落足冲击奖励只惩罚脚底从无接触到接触瞬间的峰值力，不惩罚正常站立承重。
 - 防滑奖励只惩罚支撑脚接触地面时的水平速度，不限制腾空脚的摆动。
+- `similar_to_default` 使用关节角与默认站立角的 L1 距离约束姿态。
 - 不包含全向速度、domain randomization、curriculum、teacher-student 或真机部署。
 
 USD 中以 `foot_0` 为 articulation root；MJCF 以中间的 `base` 为树根，因此左支链的关节被
